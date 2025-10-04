@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 3000;
 
-// Search apps endpoint
+// 🔹 Search apps endpoint (unchanged)
 app.get("/search", async (req, res) => {
   const { q } = req.query;
   if (!q) return res.status(400).json({ error: "No query provided" });
@@ -29,13 +29,13 @@ app.get("/search", async (req, res) => {
   }
 });
 
-// Download APK endpoint
+// 🔹 Download APK endpoint (Keith API)
 app.get("/download", async (req, res) => {
-  const { appName } = req.query;
-  if (!appName) return res.status(400).json({ error: "No app name provided" });
+  const { appUrl } = req.query; // Use appUrl instead of appName
+  if (!appUrl) return res.status(400).json({ error: "No app URL provided" });
 
   try {
-    const response = await fetch(`https://apis.davidcyriltech.my.id/download/apk?text=${encodeURIComponent(appName)}`);
+    const response = await fetch(`https://apis-keith.vercel.app/download/apk?url=${encodeURIComponent(appUrl)}`);
     const data = await response.json();
     res.json(data);
   } catch (err) {
@@ -44,4 +44,5 @@ app.get("/download", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
