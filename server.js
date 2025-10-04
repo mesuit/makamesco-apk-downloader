@@ -8,20 +8,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "public"))); // frontend folder
-
 const PORT = process.env.PORT || 3000;
 
-// 🔹 Search APK endpoint
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+
+// 🔹 Search apps endpoint
 app.get("/search", async (req, res) => {
   const { q } = req.query;
   if (!q) return res.status(400).json({ error: "No query provided" });
 
   try {
+    // Keith APK search API
     const response = await fetch(`https://apis-keith.vercel.app/apk/search?q=${encodeURIComponent(q)}`);
     const data = await response.json();
+
+    // data.result contains array of apps
     res.json(data);
   } catch (err) {
     console.error(err);
@@ -44,5 +47,6 @@ app.get("/download", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
 
