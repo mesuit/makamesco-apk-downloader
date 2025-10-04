@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Makamesco Tech APK Downloader</title> 
-  <link rel="icon" href="" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <style>
@@ -165,7 +164,7 @@
       results.appendChild(loading);
 
       try {
-        const res = await fetch(`/search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`https://apis-keith.vercel.app/apk/search?q=${encodeURIComponent(query)}`);
         const json = await res.json();
         results.innerHTML = '';
 
@@ -178,14 +177,14 @@
           const card = document.createElement("div");
           card.className = "card";
           card.innerHTML = `
-            <img src="${app.image}" alt="${app.nama}" />
+            <img src="${app.image}" alt="${app.name}" />
             <div class="meta">
-              <p><strong>${app.nama}</strong></p>
+              <p><strong>${app.name}</strong></p>
               <p>Developer: <a href="${app.link_dev}" target="_blank" style="color:#00d9ff;">${app.developer}</a></p>
               <p>Rating: ${app.rate2} ⭐</p>
             </div>
             <div class="actions">
-              <button class="download-apk" onclick="downloadAPK('${app.nama}', this)">
+              <button class="download-apk" onclick="window.open('${app.download_link}', '_blank')">
                 <span class="material-icons">file_download</span> Download APK
               </button>
               <button class="play-store" onclick="window.open('${app.url}', '_blank')">
@@ -200,33 +199,8 @@
         error.textContent = "❌ Failed to fetch data.";
       }
     }
-
-    async function downloadAPK(appName, button) {
-      const card = button.closest('.card');
-      const loader = document.createElement("div");
-      loader.className = "loading";
-      loader.textContent = "Fetching download link...";
-      card.appendChild(loader);
-      button.disabled = true;
-
-      try {
-        const res = await fetch(`/download?appName=${encodeURIComponent(appName)}`);
-        const json = await res.json();
-
-        if (json?.success && json?.download_link) {
-          window.open(json.download_link, '_blank');
-        } else {
-          alert("❌ Download link not found.");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("❌ Error downloading APK.");
-      } finally {
-        loader.remove();
-        button.disabled = false;
-      }
-    }
   </script>
 
 </body>
 </html>
+
